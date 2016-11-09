@@ -8,7 +8,7 @@
 /**
  * Constructor por defectos de PagAssistantClass
  */
-PagAssistantClass::PagAssistantClass(){}
+PagAssistantClass::PagAssistantClass() {}
 
 /**
  * Funcion encargada de leer ficheros txt del disco
@@ -91,17 +91,9 @@ PagRevolutionObject PagAssistantClass::leerDatos(Structs::Fichero _fichero) cons
 	}
 }
 
-/**
- * Funcion encargada de escribir los ficheros txt en disco
- */
-void PagAssistantClass::devolverDatos(const PagRevolutionObject &object, std::string nombreAlumno) {
-	Geometria *geometria = &object.getGeometria();
-	CoordTexturas *coordtext = &object.getCoordText();
-	int *indices = &object.getIndices();
-	int tamaGeometriaCoordText = object.getTamaGeometriaCoordText();
-	int tamaIndices = object.getTamaIndices();
-	int tamIndicesTapes = object.getTamaIndicesTapes();
-
+void PagAssistantClass::devolverDatos(const Geometria *geometria, const CoordTexturas *coordtext,
+	const int *indices, const int tamaGeometriaCoordText, std::string nombreAlumno,
+	const int tamaIndices, const int tamaIndicesTapes) {
 	char* docdir = getenv("userprofile");
 	std::string path = docdir;
 	path += "/Desktop/";
@@ -109,12 +101,23 @@ void PagAssistantClass::devolverDatos(const PagRevolutionObject &object, std::st
 	std::string nombreFichero;
 
 	//ARCHIVO GEOMETRIA
+	for (int i = 0; i < tamaGeometriaCoordText; i++) {
+		std::cout << geometria[i].vertice.x << ","
+			<< geometria[i].vertice.y << ","
+			<< geometria[i].vertice.z << ","
+			<< geometria[i].normal.x << ","
+			<< geometria[i].normal.y << ","
+			<< geometria[i].normal.z << ","
+			<< geometria[i].tangente.x << ","
+			<< geometria[i].tangente.y << ","
+			<< geometria[i].tangente.z << ","
+			<< i << std::endl;
+	}
 
 	nombreFichero = path;
 	nombreFichero += "-out-geom.txt";
 	std::ofstream ficheroGeom;
 	ficheroGeom.open(nombreFichero);
-	ficheroGeom << tamaGeometriaCoordText << std::endl;
 	for (int i = 0; i < tamaGeometriaCoordText; i++) {
 		ficheroGeom << geometria[i].vertice.x << ","
 			<< geometria[i].vertice.y << ","
@@ -152,33 +155,95 @@ void PagAssistantClass::devolverDatos(const PagRevolutionObject &object, std::st
 		ficheroInd << indices[i] << std::endl;
 	}
 	ficheroInd.close();
-
-	if (object.getFlagBottomTape()) {
-		int *indicesBottom = &object.getIndicesBottomTape();
-		nombreFichero = path;
-		nombreFichero += "-out-ind_BottomTape.txt";
-		std::ofstream ficheroIndBottom;
-		ficheroIndBottom.open(nombreFichero);
-		ficheroIndBottom << tamIndicesTapes << std::endl;
-		for (int i = 0; i < tamIndicesTapes; i++) {
-			ficheroIndBottom << indicesBottom[i] << std::endl;
-		}
-		ficheroInd.close();
-	}
-
-	if (object.getFlagTopTape()) {
-		int *indicesTop = &object.getIndicesTopTape();
-		nombreFichero = path;
-		nombreFichero += "-out-ind_TopTape.txt";
-		std::ofstream ficheroIndTop;
-		ficheroIndTop.open(nombreFichero);
-		ficheroIndTop << tamIndicesTapes << std::endl;
-		for (int i = 0; i < tamIndicesTapes; i++) {
-			ficheroIndTop << indicesTop[i] << std::endl;
-		}
-		ficheroIndTop.close();
-	}
 }
+
+/**
+ * Funcion encargada de escribir los ficheros txt en disco
+ */
+//void PagAssistantClass::devolverDatos(const PagRevolutionObject &object, std::string nombreAlumno) {
+//	Geometria *geometria = &object.getGeometria();
+//	CoordTexturas *coordtext = &object.getCoordText();
+//	int *indices = &object.getIndices();
+//	int tamaGeometriaCoordText = object.getTamaGeometriaCoordText();
+//	int tamaIndices = object.getTamaIndices();
+//	int tamIndicesTapes = object.getTamaIndicesTapes();
+//
+//	char* docdir = getenv("userprofile");
+//	std::string path = docdir;
+//	path += "/Desktop/";
+//	path += nombreAlumno;
+//	std::string nombreFichero;
+//
+//	//ARCHIVO GEOMETRIA
+//
+//	nombreFichero = path;
+//	nombreFichero += "-out-geom.txt";
+//	std::ofstream ficheroGeom;
+//	ficheroGeom.open(nombreFichero);
+//	for (int i = 0; i < tamaGeometriaCoordText; i++) {
+//		ficheroGeom << geometria[i].vertice.x << ","
+//			<< geometria[i].vertice.y << ","
+//			<< geometria[i].vertice.z << ","
+//			<< geometria[i].normal.x << ","
+//			<< geometria[i].normal.y << ","
+//			<< geometria[i].normal.z << ","
+//			<< geometria[i].tangente.x << ","
+//			<< geometria[i].tangente.y << ","
+//			<< geometria[i].tangente.z << std::endl;
+//	}
+//	ficheroGeom.close();
+//
+//	//ARCHIVO COORDTEXT
+//
+//	nombreFichero = path;
+//	nombreFichero += "-out-text.txt";
+//	std::ofstream ficheroText;
+//	ficheroText.open(nombreFichero);
+//	ficheroText << tamaGeometriaCoordText << std::endl;
+//	for (int i = 0; i < tamaGeometriaCoordText; i++) {
+//		ficheroText << coordtext[i].s << ","
+//			<< coordtext[i].t << std::endl;
+//	}
+//	ficheroText.close();
+//
+//	//ARCHIVOS INDICES
+//
+//	nombreFichero = path;
+//	nombreFichero += "-out-ind.txt";
+//	std::ofstream ficheroInd;
+//	ficheroInd.open(nombreFichero);
+//	ficheroInd << tamaIndices << std::endl;
+//	for (int i = 0; i < tamaIndices; i++) {
+//		ficheroInd << indices[i] << std::endl;
+//	}
+//	ficheroInd.close();
+//
+//	if (object.getFlagBottomTape()) {
+//		int *indicesBottom = &object.getIndicesBottomTape();
+//		nombreFichero = path;
+//		nombreFichero += "-out-ind_BottomTape.txt";
+//		std::ofstream ficheroIndBottom;
+//		ficheroIndBottom.open(nombreFichero);
+//		ficheroIndBottom << tamIndicesTapes << std::endl;
+//		for (int i = 0; i < tamIndicesTapes; i++) {
+//			ficheroIndBottom << indicesBottom[i] << std::endl;
+//		}
+//		ficheroInd.close();
+//	}
+//
+//	if (object.getFlagTopTape()) {
+//		int *indicesTop = &object.getIndicesTopTape();
+//		nombreFichero = path;
+//		nombreFichero += "-out-ind_TopTape.txt";
+//		std::ofstream ficheroIndTop;
+//		ficheroIndTop.open(nombreFichero);
+//		ficheroIndTop << tamIndicesTapes << std::endl;
+//		for (int i = 0; i < tamIndicesTapes; i++) {
+//			ficheroIndTop << indicesTop[i] << std::endl;
+//		}
+//		ficheroIndTop.close();
+//	}
+//}
 
 /**
 * Destructor de Pag3AssistantClass

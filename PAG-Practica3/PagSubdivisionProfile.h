@@ -13,6 +13,7 @@ class PagSubdivisionProfile{
 public:
 	PagSubdivisionProfile();
 	PagSubdivisionProfile(int _numPuntosPerfilOriginal, int _numDivisiones, PuntosPerfil *_perfilOriginal);
+	PagSubdivisionProfile(const PagSubdivisionProfile &orig);
 	void operator = (const PagSubdivisionProfile &orig);
 	void subdivisionPolilineas();
 	PuntosPerfil& getPerfil() const { return *perfilSubdividido; }

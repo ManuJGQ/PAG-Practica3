@@ -26,6 +26,13 @@ PagSubdivisionProfile::PagSubdivisionProfile(int _numPuntosPerfilOriginal, int _
 }
 
 /**
+* Constructor de copia de PagSubdivisionProfile
+*/
+PagSubdivisionProfile::PagSubdivisionProfile(const PagSubdivisionProfile & orig) {
+	*this = orig;
+}
+
+/**
  * Operador igual de PagSubdivisionProfile
  */
 void PagSubdivisionProfile::operator=(const PagSubdivisionProfile & orig) {
@@ -33,15 +40,23 @@ void PagSubdivisionProfile::operator=(const PagSubdivisionProfile & orig) {
 	numPuntosPerfilSubdividido = orig.numPuntosPerfilSubdividido;
 	numDivisiones = orig.numDivisiones;
 
-	perfilOriginal = new PuntosPerfil[numPuntosPerfilOriginal];
-	for (int i = 0; i < numPuntosPerfilOriginal; i++) {
-		perfilOriginal[i] = orig.perfilOriginal[i];
+	if(orig.perfilOriginal != nullptr) {
+		perfilOriginal = new PuntosPerfil[numPuntosPerfilOriginal];
+		for (int i = 0; i < numPuntosPerfilOriginal; i++) {
+			perfilOriginal[i] = orig.perfilOriginal[i];
+		}
 	}
+	else perfilOriginal = nullptr;
 
-	perfilSubdividido = new PuntosPerfil[numPuntosPerfilSubdividido];
-	for (int i = 0; i < numPuntosPerfilSubdividido; i++) {
-		perfilSubdividido[i] = orig.perfilSubdividido[i];
+
+	if(orig.perfilSubdividido != nullptr) {
+		perfilSubdividido = new PuntosPerfil[numPuntosPerfilSubdividido];
+		for (int i = 0; i < numPuntosPerfilSubdividido; i++) {
+			perfilSubdividido[i] = orig.perfilSubdividido[i];
+		}
 	}
+	else perfilSubdividido = nullptr;
+	
 }
 
 /**
