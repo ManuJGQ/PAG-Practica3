@@ -101,18 +101,8 @@ void PagAssistantClass::devolverDatos(const Geometria *geometria, const CoordTex
 	std::string nombreFichero;
 
 	//ARCHIVO GEOMETRIA
-	for (int i = 0; i < tamaGeometriaCoordText; i++) {
-		std::cout << geometria[i].vertice.x << ","
-			<< geometria[i].vertice.y << ","
-			<< geometria[i].vertice.z << ","
-			<< geometria[i].normal.x << ","
-			<< geometria[i].normal.y << ","
-			<< geometria[i].normal.z << ","
-			<< geometria[i].tangente.x << ","
-			<< geometria[i].tangente.y << ","
-			<< geometria[i].tangente.z << ","
-			<< i << std::endl;
-	}
+
+	std::cout << geometria[0].vertice.x << std::endl;
 
 	nombreFichero = path;
 	nombreFichero += "-out-geom.txt";

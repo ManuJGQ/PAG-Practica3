@@ -211,7 +211,7 @@ void PagRevolutionObject::createObject() {
 	coordtext = new CoordTexturas[tamaGeometriaCoordText];
 	pointsColor = new PagPositionColor[tamaGeometriaCoordText];
 	indices = new int[tamaIndices];
-	_indices = new GLuint[tamaIndices - slices];
+	_indices = new GLuint[tamaIndices];
 
 	PuntosPerfil *perfil = &subdivisionProfiles.getPerfil();
 
@@ -410,8 +410,9 @@ void PagRevolutionObject::createObject() {
 	double *modulo = new double[numPuntosPerfil - (numTapas * 2)];
 
 	for (int j = 0; j < slices; j++) {
-
-		double s = j * double(float(1) / float(slices - 1));
+		double s;
+		if((slices - 1) > 0) s= j * double(float(1) / float(slices + 1));
+		else s = j * double(float(1) / float(slices));
 
 		double sumatorio = 0;
 
@@ -438,6 +439,8 @@ void PagRevolutionObject::createObject() {
 		for (int i = cambioIndice; i < numPuntosPerfil - cambioIndiceTop; i++) {
 
 			double t = (modulo[i - cambioIndice]) / (sumatorio);
+
+			std::cout << s << std::endl;
 
 			coordtext[(i - cambioIndice) * slices + j].s = s;
 			coordtext[(i - cambioIndice) * slices + j].t = t;
@@ -587,8 +590,8 @@ PagRevolutionObject::~PagRevolutionObject() {
 	if (indicesTopTape != nullptr) delete[] indicesTopTape;
 	if (pointsColor != nullptr) delete[] pointsColor;
 	if (_indices != nullptr) delete[] _indices;
-	if (flagTopTape) delete[] _indicesTop;
-	if (flagBottomTape) delete[] _indicesBottom;
+	if (_indicesBottom != nullptr) delete[] _indicesTop;
+	if (_indicesTop != nullptr) delete[] _indicesBottom;
 
 	std::cout << "BORRE" << std::endl;
 }
