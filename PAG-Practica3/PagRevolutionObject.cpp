@@ -243,8 +243,7 @@ void PagRevolutionObject::createObject() {
 				vert.x = x;
 				vert.y = perfil[j].y;
 				vert.z = z;
-				std::cout << tamaGeometriaCoordText << std::endl;
-				std::cout << (j - cambioIndice) * slices + i << std::endl;
+
 				geometria[(j - cambioIndice) * slices + i].vertice = vert;
 				if (j == 1 && flagBottomTape) geometriaBottomTape[i].vertice = vert;
 				if (j == numPuntosPerfil - 2 && flagTopTape) geometriaTopTape[i].vertice = vert;
@@ -402,7 +401,7 @@ void PagRevolutionObject::createObject() {
 		}
 	}
 
-	double *modulo = new double[numPuntosPerfil - (numTapas * 2)];
+	double *modulo = new double[numPuntosPerfil - numTapas];
 
 	for (int j = 0; j < slices; j++) {
 		double s;
@@ -413,7 +412,7 @@ void PagRevolutionObject::createObject() {
 
 		modulo[0] = sumatorio;
 
-		for (int i = cambioIndice + 1; i < numPuntosPerfil - cambioIndiceTop; i++) {
+		for (int i = 1; i < numPuntosPerfil - numTapas; i++) {
 
 			PuntosVertices p1 = geometria[(i - cambioIndice) * slices + j].vertice;
 			PuntosVertices p2 = geometria[(i - cambioIndice - 1) * slices + j].vertice;
@@ -427,12 +426,15 @@ void PagRevolutionObject::createObject() {
 
 			sumatorio += modV1;
 
-			modulo[i - cambioIndiceTop - 1] = sumatorio;
+			modulo[i] = sumatorio;
 		}
 
-		for (int i = cambioIndice + 1; i < numPuntosPerfil - cambioIndiceTop; i++) {
+		/*coordtext[j].s = s;
+		coordtext[j].t = 0;*/
 
-			double t = (modulo[i - cambioIndice - 1]) / (sumatorio);
+		for (int i = cambioIndice; i < numPuntosPerfil - cambioIndiceTop; i++) {
+
+			double t = (modulo[i - cambioIndice]) / (sumatorio);
 
 			coordtext[(i - cambioIndice) * slices + j].s = s;
 			coordtext[(i - cambioIndice) * slices + j].t = t;

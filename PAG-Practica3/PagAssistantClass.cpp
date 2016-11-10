@@ -108,6 +108,7 @@ void PagAssistantClass::devolverDatos(const Geometria *geometria, const CoordTex
 	nombreFichero += "-out-geom.txt";
 	std::ofstream ficheroGeom;
 	ficheroGeom.open(nombreFichero);
+	ficheroGeom << tamaGeometriaCoordText << std::endl;
 	for (int i = 0; i < tamaGeometriaCoordText; i++) {
 		ficheroGeom << geometria[i].vertice.x << ","
 			<< geometria[i].vertice.y << ","

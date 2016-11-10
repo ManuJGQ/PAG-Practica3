@@ -22,12 +22,15 @@ class PagRevolutionObject: public Pag3DObject{
 	CoordTexturas *coordtext;
 	CoordTexturas *coordtextBottomTape;
 	CoordTexturas *coordtextTopTape;
+
 	int *indices;
 	int *indicesBottomTape;
 	int *indicesTopTape;
+
 	int slices;
 	int tamaGeometriaCoordText;
 	int tamaIndices;
+
 	PagPositionColor *pointsColor;
 	GLuint *_indices;
 	GLuint *_indicesTop;
