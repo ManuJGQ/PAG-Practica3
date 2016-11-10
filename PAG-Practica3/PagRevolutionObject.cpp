@@ -243,6 +243,8 @@ void PagRevolutionObject::createObject() {
 				vert.x = x;
 				vert.y = perfil[j].y;
 				vert.z = z;
+				std::cout << tamaGeometriaCoordText << std::endl;
+				std::cout << (j - cambioIndice) * slices + i << std::endl;
 				geometria[(j - cambioIndice) * slices + i].vertice = vert;
 				if (j == 1 && flagBottomTape) geometriaBottomTape[i].vertice = vert;
 				if (j == numPuntosPerfil - 2 && flagTopTape) geometriaTopTape[i].vertice = vert;
@@ -263,6 +265,9 @@ void PagRevolutionObject::createObject() {
 			normal.z = 0;
 
 			geometriaBottomTape[slices].normal = normal;
+			for (int i = 0; i < slices; i++) {
+				geometriaBottomTape[i].normal = normal;
+			}
 		}
 		else if (j == numPuntosPerfil - 1 && flagTopTape) {
 			NormalesTangentes normal;
@@ -272,33 +277,23 @@ void PagRevolutionObject::createObject() {
 			normal.z = 0;
 
 			geometriaTopTape[slices].normal = normal;
+			for (int i = 0; i < slices; i++) {
+				geometriaTopTape[i].normal = normal;
+			}
 		}
 		else {
 			for (int i = 0; i < slices; i++) {
-				if (j == 1 && flagBottomTape) {
-					NormalesTangentes normal;
-
-					normal.x = 0;
-					normal.y = -1;
-					normal.z = 0;
-
-					geometriaBottomTape[i].normal = normal;
-				}
-				if (j == numPuntosPerfil - 2 && flagTopTape) {
-					NormalesTangentes normal;
-
-					normal.x = 0;
-					normal.y = 1;
-					normal.z = 0;
-
-					geometriaTopTape[i].normal = normal;
-				}
 
 				PuntosVertices p1;
+				PuntosVertices p2;
+
 				if (j == 0 || (j == 1 && flagBottomTape)) p1 = { 0,0,0 };
 				else p1 = geometria[(j - cambioIndice) * slices + i - 1].vertice;
+
 				PuntosVertices pi = geometria[(j - cambioIndice) * slices + i].vertice;
-				PuntosVertices p2 = geometria[(j - cambioIndice) * slices + i + 1].vertice;
+
+				if (j == numPuntosPerfil - 1 || (j == numPuntosPerfil - 2 && flagTopTape)) p2 = { 0,0,0 };
+				else p2 = geometria[(j - cambioIndice) * slices + i + 1].vertice;
 
 				PuntosVertices v1;
 				v1.x = pi.x - p1.x;
@@ -418,11 +413,10 @@ void PagRevolutionObject::createObject() {
 
 		modulo[0] = sumatorio;
 
-		for (int i = cambioIndice; i < numPuntosPerfil - cambioIndiceTop; i++) {
+		for (int i = cambioIndice + 1; i < numPuntosPerfil - cambioIndiceTop; i++) {
 
 			PuntosVertices p1 = geometria[(i - cambioIndice) * slices + j].vertice;
-			PuntosVertices p2 = { 0,0,0 };
-			if (i - cambioIndice > 0) p2 = geometria[(i - cambioIndice - 1) * slices + j].vertice;
+			PuntosVertices p2 = geometria[(i - cambioIndice - 1) * slices + j].vertice;
 
 			PuntosVertices v1;
 			v1.x = p1.x - p2.x;
@@ -433,14 +427,12 @@ void PagRevolutionObject::createObject() {
 
 			sumatorio += modV1;
 
-			modulo[i - cambioIndiceTop] = sumatorio;
+			modulo[i - cambioIndiceTop - 1] = sumatorio;
 		}
 
-		for (int i = cambioIndice; i < numPuntosPerfil - cambioIndiceTop; i++) {
+		for (int i = cambioIndice + 1; i < numPuntosPerfil - cambioIndiceTop; i++) {
 
-			double t = (modulo[i - cambioIndice]) / (sumatorio);
-
-			std::cout << s << std::endl;
+			double t = (modulo[i - cambioIndice - 1]) / (sumatorio);
 
 			coordtext[(i - cambioIndice) * slices + j].s = s;
 			coordtext[(i - cambioIndice) * slices + j].t = t;
@@ -579,7 +571,10 @@ void PagRevolutionObject::drawPointsCloud(glm::mat4 _ViewProjectionMatrix) {
  */
 PagRevolutionObject::~PagRevolutionObject() {
 	std::cout << "BORRO" << std::endl;
-	if (geometria != nullptr) delete[] geometria;
+	if (geometria != nullptr) {
+		std::cout << geometria << std::endl;
+		delete[] geometria;
+	}
 	if (geometriaBottomTape != nullptr) delete[] geometriaBottomTape;
 	if (geometriaTopTape != nullptr) delete[] geometriaTopTape;
 	if (coordtext != nullptr) delete[] coordtext;

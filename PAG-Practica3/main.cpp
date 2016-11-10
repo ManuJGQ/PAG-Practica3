@@ -102,7 +102,7 @@ int main(int argc, char** argv) {
 	}
 
 	//Dibujamos los objetos
-	/*do {
+	do {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glm::mat4 ProjectionMatrix = glm::mat4(1.0f);
@@ -121,8 +121,9 @@ int main(int argc, char** argv) {
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-	} while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);*/
+	} while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 
 	delete[] ficheros;
+
 	return 0;
 }
