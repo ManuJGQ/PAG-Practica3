@@ -405,7 +405,7 @@ void PagRevolutionObject::createObject() {
 
 	for (int j = 0; j < slices; j++) {
 		double s;
-		if((slices - 1) > 0) s= j * double(float(1) / float(slices + 1));
+		if((slices - 1) > 0) s = j * double(float(1) / float(slices - 1));
 		else s = j * double(float(1) / float(slices));
 
 		double sumatorio = 0;
@@ -434,12 +434,16 @@ void PagRevolutionObject::createObject() {
 
 		for (int i = cambioIndice; i < numPuntosPerfil - cambioIndiceTop; i++) {
 
+			std::cout << s << std::endl;
+
 			double t = (modulo[i - cambioIndice]) / (sumatorio);
 
 			coordtext[(i - cambioIndice) * slices + j].s = s;
 			coordtext[(i - cambioIndice) * slices + j].t = t;
 		}
 	}
+
+	delete [] modulo;
 
 	// INDICES
 
