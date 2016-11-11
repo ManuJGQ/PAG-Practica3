@@ -101,6 +101,8 @@ int main(int argc, char** argv) {
 		object.createObject();
 	}
 
+	glEnable(GL_CULL_FACE);
+
 	//Dibujamos los objetos
 	do {
 		glClear(GL_COLOR_BUFFER_BIT);

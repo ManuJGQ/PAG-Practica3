@@ -341,6 +341,7 @@ void PagRevolutionObject::createObject() {
 				vi.y = xTemp * -1;
 
 				if (j == 0 || (j == 1 && flagBottomTape)) v1 = vi;
+				if (j == numPuntosPerfil - 1 || (j == numPuntosPerfil - 2 && flagTopTape)) vi = v1;
 
 				NormalesTangentes normal;
 
@@ -636,7 +637,7 @@ void PagRevolutionObject::drawPointsCloud(glm::mat4 _ViewProjectionMatrix) {
 
 void PagRevolutionObject::drawSolid(glm::mat4 _ViewProjectionMatrix){
 	if (!shaderCreado) {
-		shader.createShaderProgram("pointsMultiColor");
+		shader.createShaderProgram("Test");
 		shaderCreado = true;
 	}
 

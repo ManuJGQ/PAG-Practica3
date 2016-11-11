@@ -1,9 +1,11 @@
 #version 400
 
-in vec4 destinationColor;
-
 layout (location = 0) out vec4 fragColor;
 
 void main() {
-	fragColor = destinationColor;
+	if(gl_FrontFacing){
+		fragColor = vec4(0.0, 1.0, 0.0, 1.0);
+	} else {
+		fragColor = vec4(1.0, 0.0, 0.0, 1.0);
+	}
 }
