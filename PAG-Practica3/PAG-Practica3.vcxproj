@@ -154,6 +154,8 @@
     <None Include="points.vert" />
     <None Include="pointsMultiColor.frag" />
     <None Include="pointsMultiColor.vert" />
+    <None Include="Test.frag" />
+    <None Include="Test.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

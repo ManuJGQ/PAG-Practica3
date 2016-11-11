@@ -79,5 +79,11 @@
     <None Include="pointsMultiColor.vert">
       <Filter>Archivos de recursos</Filter>
     </None>
+    <None Include="Test.frag">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="Test.vert">
+      <Filter>Archivos de recursos</Filter>
+    </None>
   </ItemGroup>
 </Project>
