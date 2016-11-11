@@ -113,10 +113,10 @@ int main(int argc, char** argv) {
 		glm::mat4 ViewProjectionMatrix = ProjectionMatrix * ViewMatrix;
 		
 		if (perfiles > 1) {
-			objects.drawPointsCloud(ViewProjectionMatrix);
+			objects.drawSolid(ViewProjectionMatrix);
 		}
 		else {
-			object.drawPointsCloud(ViewProjectionMatrix);
+			object.drawSolid(ViewProjectionMatrix);
 		}
 
 		glfwSwapBuffers(window);

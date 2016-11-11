@@ -30,6 +30,7 @@ class PagRevolutionObject: public Pag3DObject{
 	int tamaGeometriaCoordText;
 	int tamaIndices;
 
+	//Arrays para los vbos y ibos
 	PagPositionColor *pointsColor;
 	PagPositionColor *pointsColorBottom;
 	PagPositionColor *pointsColorTop;
@@ -52,6 +53,7 @@ public:
 	void operator = (const PagRevolutionObject &orig);
 	void createObject() override;
 	void drawPointsCloud(glm::mat4 _ViewProjectionMatrix) override;
+	void drawSolid(glm::mat4 _ViewProjectionMatrix) override;
 
 	//Metodos Gets
 

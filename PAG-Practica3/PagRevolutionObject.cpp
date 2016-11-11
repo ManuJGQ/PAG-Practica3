@@ -12,8 +12,8 @@ PagRevolutionObject::PagRevolutionObject() : flagBottomTape(false), flagTopTape(
 geometria(nullptr), geometriaBottomTape(nullptr), geometriaTopTape(nullptr), coordtext(nullptr),
 coordtextBottomTape(nullptr), coordtextTopTape(nullptr), indices(nullptr), indicesBottomTape(nullptr),
 indicesTopTape(nullptr), slices(0), tamaGeometriaCoordText(0), tamaIndices(0),
-pointsColor(nullptr), _indices(nullptr), _indicesTop(nullptr), _indicesBottom(nullptr), shaderCreado(false) {
-};
+pointsColor(nullptr), pointsColorBottom(nullptr), pointsColorTop(nullptr), _indices(nullptr), _indicesTop(nullptr),
+_indicesBottom(nullptr), shaderCreado(false) {};
 
 /**
  * Constructor parametrizado de PagRevolutionObject
@@ -22,7 +22,7 @@ PagRevolutionObject::PagRevolutionObject(int _numPuntosPerfilOriginal, int _numD
 	bool _flagBottomTape, bool _flagTopTape, int _slices, std::string _nombreAlumno) : flagBottomTape(false), flagTopTape(false),
 	geometria(nullptr), geometriaBottomTape(nullptr), geometriaTopTape(nullptr), coordtext(nullptr), coordtextBottomTape(nullptr),
 	coordtextTopTape(nullptr), indices(nullptr), indicesBottomTape(nullptr), indicesTopTape(nullptr),
-	tamaGeometriaCoordText(0), tamaIndices(0), pointsColor(nullptr),
+	tamaGeometriaCoordText(0), tamaIndices(0), pointsColor(nullptr), pointsColorBottom(nullptr), pointsColorTop(nullptr),
 	_indices(nullptr), _indicesTop(nullptr), _indicesBottom(nullptr), shaderCreado(false), nombreAlumno(_nombreAlumno) {
 
 	flagBottomTape = _flagBottomTape;
@@ -153,6 +153,22 @@ void PagRevolutionObject::operator=(const PagRevolutionObject & orig) {
 	}
 	else pointsColor = nullptr;
 
+	if (orig.pointsColorBottom != nullptr) {
+		pointsColorBottom = new PagPositionColor[tamaGeometriaCoordText];
+		for (int i = 0; i < tamaGeometriaCoordText; i++) {
+			pointsColorBottom[i] = orig.pointsColorBottom[i];
+		}
+	}
+	else pointsColorBottom = nullptr;
+
+	if (orig.pointsColorTop != nullptr) {
+		pointsColorTop = new PagPositionColor[tamaGeometriaCoordText];
+		for (int i = 0; i < tamaGeometriaCoordText; i++) {
+			pointsColorTop[i] = orig.pointsColorTop[i];
+		}
+	}
+	else pointsColorTop = nullptr;
+
 	if (orig._indices != nullptr) {
 		_indices = new GLuint[tamaIndices - slices];
 		for (int i = 0; i < tamaIndices - slices; i++) {
@@ -194,6 +210,7 @@ void PagRevolutionObject::createObject() {
 		geometriaBottomTape = new Geometria[slices + 1];
 		coordtextBottomTape = new CoordTexturas[slices + 1];
 		indicesBottomTape = new int[slices + 1];
+		pointsColorBottom = new PagPositionColor[slices + 1];
 		_indicesBottom = new GLuint[slices + 1];
 	}
 	if (flagTopTape) {
@@ -202,6 +219,7 @@ void PagRevolutionObject::createObject() {
 		geometriaTopTape = new Geometria[slices + 1];
 		coordtextTopTape = new CoordTexturas[slices + 1];
 		indicesTopTape = new int[slices + 1];
+		pointsColorTop = new PagPositionColor[slices + 1];
 		_indicesTop = new GLuint[slices + 1];
 	}
 
@@ -405,7 +423,7 @@ void PagRevolutionObject::createObject() {
 
 	for (int j = 0; j < slices; j++) {
 		double s;
-		if((slices - 1) > 0) s = j * double(float(1) / float(slices - 1));
+		if ((slices - 1) > 0) s = j * double(float(1) / float(slices - 1));
 		else s = j * double(float(1) / float(slices));
 
 		double sumatorio = 0;
@@ -438,7 +456,7 @@ void PagRevolutionObject::createObject() {
 		}
 	}
 
-	delete [] modulo;
+	delete[] modulo;
 
 	// INDICES
 
@@ -468,7 +486,7 @@ void PagRevolutionObject::createObject() {
 	PagAssistantClass f;
 	f.devolverDatos(*this);
 
-	//Arrays para los vbo y ibos
+	//Arrays para los vbos y ibos
 	for (int i = 0; i < tamaGeometriaCoordText; i++) {
 		pointsColor[i] = { glm::vec3((GLfloat)geometria[i].vertice.x, (GLfloat)geometria[i].vertice.y, (GLfloat)geometria[i].vertice.z),
 			glm::vec3(0.0, 0.0, 0.0) };
@@ -480,11 +498,21 @@ void PagRevolutionObject::createObject() {
 
 	if (flagBottomTape) {
 		for (int i = 0; i < slices + 1; i++) {
+			pointsColorBottom[i] = { glm::vec3((GLfloat)geometriaBottomTape[i].vertice.x, (GLfloat)geometriaBottomTape[i].vertice.y, 
+				(GLfloat)geometriaBottomTape[i].vertice.z), glm::vec3(1.0, 0.0, 0.0) };
+		}
+
+		for (int i = 0; i < slices + 1; i++) {
 			_indicesBottom[i] = (GLuint)indicesBottomTape[i];
 		}
 	}
 
 	if (flagTopTape) {
+		for (int i = 0; i < slices + 1; i++) {
+			pointsColorTop[i] = { glm::vec3((GLfloat)geometriaTopTape[i].vertice.x, (GLfloat)geometriaTopTape[i].vertice.y, 
+				(GLfloat)geometriaTopTape[i].vertice.z), glm::vec3(0.0, 0.0, 1.0) };
+		}
+
 		for (int i = 0; i < slices + 1; i++) {
 			_indicesTop[i] = (GLuint)indicesTopTape[i];
 		}
@@ -507,7 +535,13 @@ void PagRevolutionObject::drawPointsCloud(glm::mat4 _ViewProjectionMatrix) {
 	GLuint vao;
 	GLuint vbo;
 	GLuint ibo;
+
+	GLuint vaoBottomTape;
+	GLuint vboBottomTape;
 	GLuint iboBottomTape;
+
+	GLuint vaoTopTape;
+	GLuint vboTopTape;
 	GLuint iboTopTape;
 
 	glGenVertexArrays(1, &vao);
@@ -533,33 +567,182 @@ void PagRevolutionObject::drawPointsCloud(glm::mat4 _ViewProjectionMatrix) {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * (tamaIndices), _indices, GL_STATIC_DRAW);
 
-	if (flagBottomTape) {
-		glGenBuffers(1, &iboBottomTape);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboBottomTape);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * (slices + 1), _indicesBottom, GL_STATIC_DRAW);
-	}
-
-	if (flagTopTape) {
-		glGenBuffers(1, &iboTopTape);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboTopTape);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * (slices + 1), _indicesTop, GL_STATIC_DRAW);
-	}
-
 	glBindVertexArray(vao);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 	glDrawElements(GL_POINTS, (sizeof(GLuint) * (tamaIndices)) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
 
 	if (flagBottomTape) {
+		glGenVertexArrays(1, &vaoBottomTape);
+		glBindVertexArray(vaoBottomTape);
+		glGenBuffers(1, &vboBottomTape);
+		glBindBuffer(GL_ARRAY_BUFFER, vboBottomTape);
+
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, sizeof(glm::vec3) / sizeof(GLfloat),
+			GL_FLOAT, GL_FALSE, sizeof(PagPositionColor),						//POSITIONS
+			((GLubyte *)nullptr + (0)));
+
+		//MULTICOLOR
+
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, sizeof(glm::vec3) / sizeof(GLfloat),
+			GL_FLOAT, GL_FALSE, sizeof(PagPositionColor),						//COLORS
+			((GLubyte *)nullptr + (sizeof(glm::vec3))));
+
+		glBufferData(GL_ARRAY_BUFFER, sizeof(PagPositionColor) * (slices + 1), pointsColorBottom, GL_STATIC_DRAW);
+
+		glGenBuffers(1, &iboBottomTape);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboBottomTape);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * (slices + 1), _indicesBottom, GL_STATIC_DRAW);
+
+		glBindVertexArray(vaoBottomTape);
+
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboBottomTape);
 		glDrawElements(GL_POINTS, (sizeof(GLuint) * (slices + 1)) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
 	}
 
 	if (flagTopTape) {
+		glGenVertexArrays(1, &vaoTopTape);
+		glBindVertexArray(vaoTopTape);
+		glGenBuffers(1, &vboTopTape);
+		glBindBuffer(GL_ARRAY_BUFFER, vboTopTape);
+
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, sizeof(glm::vec3) / sizeof(GLfloat),
+			GL_FLOAT, GL_FALSE, sizeof(PagPositionColor),						//POSITIONS
+			((GLubyte *)nullptr + (0)));
+
+		//MULTICOLOR
+
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, sizeof(glm::vec3) / sizeof(GLfloat),
+			GL_FLOAT, GL_FALSE, sizeof(PagPositionColor),						//COLORS
+			((GLubyte *)nullptr + (sizeof(glm::vec3))));
+
+		glBufferData(GL_ARRAY_BUFFER, sizeof(PagPositionColor) * (slices + 1), pointsColorTop, GL_STATIC_DRAW);
+
+		glGenBuffers(1, &iboTopTape);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboTopTape);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * (slices + 1), _indicesTop, GL_STATIC_DRAW);
+
+		glBindVertexArray(vaoTopTape);
+
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboTopTape);
 		glDrawElements(GL_POINTS, (sizeof(GLuint) * (slices + 1)) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
 	}
 
+}
+
+void PagRevolutionObject::drawSolid(glm::mat4 _ViewProjectionMatrix){
+	if (!shaderCreado) {
+		shader.createShaderProgram("pointsMultiColor");
+		shaderCreado = true;
+	}
+
+	shader.use();
+	shader.setUniform("pointSize", 4.0f);
+	shader.setUniform("mvpMatrix", _ViewProjectionMatrix);
+
+	GLuint vao;
+	GLuint vbo;
+	GLuint ibo;
+
+	GLuint vaoBottomTape;
+	GLuint vboBottomTape;
+	GLuint iboBottomTape;
+
+	GLuint vaoTopTape;
+	GLuint vboTopTape;
+	GLuint iboTopTape;
+
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, sizeof(glm::vec3) / sizeof(GLfloat),
+		GL_FLOAT, GL_FALSE, sizeof(PagPositionColor),						//POSITIONS
+		((GLubyte *)nullptr + (0)));
+
+	//MULTICOLOR
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, sizeof(glm::vec3) / sizeof(GLfloat),
+		GL_FLOAT, GL_FALSE, sizeof(PagPositionColor),						//COLORS
+		((GLubyte *)nullptr + (sizeof(glm::vec3))));
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(PagPositionColor) * tamaGeometriaCoordText, pointsColor, GL_STATIC_DRAW);
+
+	glGenBuffers(1, &ibo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * (tamaIndices), _indices, GL_STATIC_DRAW);
+
+	glBindVertexArray(vao);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	glDrawElements(GL_TRIANGLE_STRIP, (sizeof(GLuint) * (tamaIndices)) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
+
+	if (flagBottomTape) {
+		glGenVertexArrays(1, &vaoBottomTape);
+		glBindVertexArray(vaoBottomTape);
+		glGenBuffers(1, &vboBottomTape);
+		glBindBuffer(GL_ARRAY_BUFFER, vboBottomTape);
+
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, sizeof(glm::vec3) / sizeof(GLfloat),
+			GL_FLOAT, GL_FALSE, sizeof(PagPositionColor),						//POSITIONS
+			((GLubyte *)nullptr + (0)));
+
+		//MULTICOLOR
+
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, sizeof(glm::vec3) / sizeof(GLfloat),
+			GL_FLOAT, GL_FALSE, sizeof(PagPositionColor),						//COLORS
+			((GLubyte *)nullptr + (sizeof(glm::vec3))));
+
+		glBufferData(GL_ARRAY_BUFFER, sizeof(PagPositionColor) * (slices + 1), pointsColorBottom, GL_STATIC_DRAW);
+
+		glGenBuffers(1, &iboBottomTape);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboBottomTape);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * (slices + 1), _indicesBottom, GL_STATIC_DRAW);
+
+		glBindVertexArray(vaoBottomTape);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboBottomTape);
+		glDrawElements(GL_TRIANGLE_FAN, (sizeof(GLuint) * (slices + 1)) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
+	}
+
+	if (flagTopTape) {
+		glGenVertexArrays(1, &vaoTopTape);
+		glBindVertexArray(vaoTopTape);
+		glGenBuffers(1, &vboTopTape);
+		glBindBuffer(GL_ARRAY_BUFFER, vboTopTape);
+
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, sizeof(glm::vec3) / sizeof(GLfloat),
+			GL_FLOAT, GL_FALSE, sizeof(PagPositionColor),						//POSITIONS
+			((GLubyte *)nullptr + (0)));
+
+		//MULTICOLOR
+
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, sizeof(glm::vec3) / sizeof(GLfloat),
+			GL_FLOAT, GL_FALSE, sizeof(PagPositionColor),						//COLORS
+			((GLubyte *)nullptr + (sizeof(glm::vec3))));
+
+		glBufferData(GL_ARRAY_BUFFER, sizeof(PagPositionColor) * (slices + 1), pointsColorTop, GL_STATIC_DRAW);
+
+		glGenBuffers(1, &iboTopTape);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboTopTape);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * (slices + 1), _indicesTop, GL_STATIC_DRAW);
+
+		glBindVertexArray(vaoTopTape);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboTopTape);
+		glDrawElements(GL_TRIANGLE_FAN, (sizeof(GLuint) * (slices + 1)) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
+	}
 }
 
 /**
@@ -576,6 +759,8 @@ PagRevolutionObject::~PagRevolutionObject() {
 	if (indicesBottomTape != nullptr) delete[] indicesBottomTape;
 	if (indicesTopTape != nullptr) delete[] indicesTopTape;
 	if (pointsColor != nullptr) delete[] pointsColor;
+	if (pointsColorTop != nullptr) delete[] pointsColorTop;
+	if (pointsColorBottom != nullptr) delete[] pointsColorBottom;
 	if (_indices != nullptr) delete[] _indices;
 	if (_indicesBottom != nullptr) delete[] _indicesTop;
 	if (_indicesTop != nullptr) delete[] _indicesBottom;

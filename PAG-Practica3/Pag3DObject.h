@@ -8,6 +8,7 @@ class Pag3DObject : public Pag3DElement {
 	PagShaderProgram shader;
 public:
 	void drawPointsCloud(glm::mat4 ViewProjectionMatrix) override = 0;
+	void drawSolid(glm::mat4 ViewProjectionMatrix) override = 0;
 	void createObject() override = 0;
 	Pag3DObject();
 	~Pag3DObject();
