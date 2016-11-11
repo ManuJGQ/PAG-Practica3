@@ -22,7 +22,6 @@ class PagRevolutionObject: public Pag3DObject{
 	CoordTexturas *coordtext;
 	CoordTexturas *coordtextBottomTape;
 	CoordTexturas *coordtextTopTape;
-
 	int *indices;
 	int *indicesBottomTape;
 	int *indicesTopTape;
@@ -32,6 +31,8 @@ class PagRevolutionObject: public Pag3DObject{
 	int tamaIndices;
 
 	PagPositionColor *pointsColor;
+	PagPositionColor *pointsColorBottom;
+	PagPositionColor *pointsColorTop;
 	GLuint *_indices;
 	GLuint *_indicesTop;
 	GLuint *_indicesBottom;
@@ -53,16 +54,27 @@ public:
 	void drawPointsCloud(glm::mat4 _ViewProjectionMatrix) override;
 
 	//Metodos Gets
+
 	Geometria& getGeometria() const { return *geometria; }
+	Geometria& getGeometriaBottomTape() const { return *geometriaBottomTape; }
+	Geometria& getGeometriaTopTape() const { return *geometriaTopTape; }
+
 	CoordTexturas& getCoordText() const { return *coordtext; }
+	CoordTexturas& getCoordTextBottomTape() const { return *coordtextBottomTape; }
+	CoordTexturas& getCoordTextTopTape() const { return *coordtextTopTape; }
+
 	int& getIndices() const { return *indices; }
 	int& getIndicesBottomTape() const { return *indicesBottomTape; }
 	int& getIndicesTopTape() const { return *indicesTopTape; }
+
 	int getTamaGeometriaCoordText() const { return tamaGeometriaCoordText; }
 	int getTamaIndices() const { return tamaIndices; }
 	int getTamaIndicesTapes() const { return slices + 1; }
+
 	bool getFlagBottomTape() const { return flagBottomTape; }
 	bool getFlagTopTape() const { return flagTopTape; }
+
+	std::string getNombreAlumno() const { return nombreAlumno; }
 
 	~PagRevolutionObject();
 };

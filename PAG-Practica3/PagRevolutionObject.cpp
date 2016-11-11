@@ -43,7 +43,7 @@ PagRevolutionObject::PagRevolutionObject(int _numPuntosPerfilOriginal, int _numD
  * Constructor parametrizado de PagRevolutionObject, pasandole un Fichero txt
  */
 PagRevolutionObject::PagRevolutionObject(Structs::Fichero _fichero) {
-	PagAssistantClass f{};
+	PagAssistantClass f;
 	*this = f.leerDatos(_fichero);
 }
 
@@ -414,8 +414,8 @@ void PagRevolutionObject::createObject() {
 
 		for (int i = 1; i < numPuntosPerfil - numTapas; i++) {
 
-			PuntosVertices p1 = geometria[(i - cambioIndice) * slices + j].vertice;
-			PuntosVertices p2 = geometria[(i - cambioIndice - 1) * slices + j].vertice;
+			PuntosVertices p1 = geometria[i * slices + j].vertice;
+			PuntosVertices p2 = geometria[(i - 1) * slices + j].vertice;
 
 			PuntosVertices v1;
 			v1.x = p1.x - p2.x;
@@ -429,12 +429,7 @@ void PagRevolutionObject::createObject() {
 			modulo[i] = sumatorio;
 		}
 
-		/*coordtext[j].s = s;
-		coordtext[j].t = 0;*/
-
 		for (int i = cambioIndice; i < numPuntosPerfil - cambioIndiceTop; i++) {
-
-			std::cout << s << std::endl;
 
 			double t = (modulo[i - cambioIndice]) / (sumatorio);
 
@@ -470,11 +465,8 @@ void PagRevolutionObject::createObject() {
 		k++;
 	}
 
-	std::cout << "TERMINO" << std::endl;
-
-	PagAssistantClass f{};
-	std::cout << "DEVOLVER" << std::endl;
-	f.devolverDatos(geometria, coordtext, indices, tamaGeometriaCoordText, nombreAlumno, tamaIndices, slices + 1);
+	PagAssistantClass f;
+	f.devolverDatos(*this);
 
 	//Arrays para los vbo y ibos
 	for (int i = 0; i < tamaGeometriaCoordText; i++) {
@@ -497,8 +489,6 @@ void PagRevolutionObject::createObject() {
 			_indicesTop[i] = (GLuint)indicesTopTape[i];
 		}
 	}
-
-	std::cout << "TERMINE" << std::endl;
 }
 
 /**
@@ -576,11 +566,7 @@ void PagRevolutionObject::drawPointsCloud(glm::mat4 _ViewProjectionMatrix) {
  * Destructor de PagRevolutionObject
  */
 PagRevolutionObject::~PagRevolutionObject() {
-	std::cout << "BORRO" << std::endl;
-	if (geometria != nullptr) {
-		std::cout << geometria << std::endl;
-		delete[] geometria;
-	}
+	if (geometria != nullptr) delete[] geometria;
 	if (geometriaBottomTape != nullptr) delete[] geometriaBottomTape;
 	if (geometriaTopTape != nullptr) delete[] geometriaTopTape;
 	if (coordtext != nullptr) delete[] coordtext;
@@ -593,6 +579,4 @@ PagRevolutionObject::~PagRevolutionObject() {
 	if (_indices != nullptr) delete[] _indices;
 	if (_indicesBottom != nullptr) delete[] _indicesTop;
 	if (_indicesTop != nullptr) delete[] _indicesBottom;
-
-	std::cout << "BORRE" << std::endl;
 }
