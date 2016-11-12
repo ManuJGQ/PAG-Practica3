@@ -135,6 +135,7 @@
     <ClCompile Include="Pag3DGroup.cpp" />
     <ClCompile Include="Pag3DObject.cpp" />
     <ClCompile Include="PagAssistantClass.cpp" />
+    <ClCompile Include="PagCamera.cpp" />
     <ClCompile Include="PagRevolutionObject.cpp" />
     <ClCompile Include="PagShaderProgram.cpp" />
     <ClCompile Include="PagSubdivisionProfile.cpp" />
@@ -144,6 +145,7 @@
     <ClInclude Include="Pag3DGroup.h" />
     <ClInclude Include="Pag3DObject.h" />
     <ClInclude Include="PagAssistantClass.h" />
+    <ClInclude Include="PagCamera.h" />
     <ClInclude Include="PagRevolutionObject.h" />
     <ClInclude Include="PagShaderProgram.h" />
     <ClInclude Include="PagSubdivisionProfile.h" />

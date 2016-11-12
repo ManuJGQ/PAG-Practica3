@@ -475,7 +475,7 @@ void PagRevolutionObject::createObject() {
 	}
 	int k = 0;
 	for (int i = 0; i < slices; i++) {
-		for (int j = 0; j < numPuntosPerfil - ((cambioIndice - numTapas) * -2); j++) {
+		for (int j = 0; j < numPuntosPerfil - numTapas; j++) {
 			indices[k] = i + (j * slices);
 			indices[k + 1] = ((i + 1) % slices) + (j * slices);
 			k += 2;
@@ -483,6 +483,7 @@ void PagRevolutionObject::createObject() {
 		indices[k] = 0xFFFF;
 		k++;
 	}
+	std::cout << k - 1 << " - " << tamaIndices << std::endl;
 
 	PagAssistantClass f;
 	f.devolverDatos(*this);
@@ -683,6 +684,8 @@ void PagRevolutionObject::drawSolid(glm::mat4 _ViewProjectionMatrix){
 	glBindVertexArray(vao);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	glEnable(GL_PRIMITIVE_RESTART);
+	glPrimitiveRestartIndex(0xFFFF);
 	glDrawElements(GL_TRIANGLE_STRIP, (sizeof(GLuint) * (tamaIndices)) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
 
 	if (flagBottomTape) {

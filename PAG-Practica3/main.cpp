@@ -6,10 +6,20 @@
 #include "gtc\matrix_transform.hpp"
 
 #include "PagShaderProgram.h"
+#include "PagCamera.h"
 
 #include "Pag3DGroup.h"
 #include "Structs.h"
 #include "PagRevolutionObject.h"
+
+PagCamera camera;
+
+double x;
+double y;
+
+static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
+	camera.mover(1);
+}
 
 int main(int argc, char** argv) {
 	// Leemos los datos y txt del usuario
@@ -87,6 +97,10 @@ int main(int argc, char** argv) {
 	std::cout << glGetString(GL_VERSION) << std::endl;
 	std::cout << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 
+	glfwGetCursorPos(window, &x, &y);
+
+	glfwSetCursorPosCallback(window, cursor_position_callback);
+
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -101,18 +115,13 @@ int main(int argc, char** argv) {
 		object.createObject();
 	}
 
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 
 	//Dibujamos los objetos
 	do {
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glm::mat4 ProjectionMatrix = glm::mat4(1.0f);
-		glm::mat4 ViewMatrix = glm::mat4(1.0f);
-		ProjectionMatrix *= glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
-		ViewMatrix *= glm::lookAt(glm::vec3(20.0, 20.0, -20.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
-
-		glm::mat4 ViewProjectionMatrix = ProjectionMatrix * ViewMatrix;
+		glm::mat4 ViewProjectionMatrix = camera.getViewProjectionMatrix();
 		
 		if (perfiles > 1) {
 			objects.drawSolid(ViewProjectionMatrix);
