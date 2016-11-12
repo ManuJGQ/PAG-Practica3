@@ -10,11 +10,13 @@ class PagCamera{
 	double x;
 	double y;
 	double z;
+	double mouseX;
+	double mouseY;
 public:
 	PagCamera();
-	void mover(double movX);
+	PagCamera(double x, double y);
+	void mover(double movX, double movY);
 	glm::mat4 getViewProjectionMatrix() const { return ProjectionMatrix * ViewMatrix; }
-	double getX() const { return x; }
 
 	~PagCamera();
 };

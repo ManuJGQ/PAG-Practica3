@@ -14,11 +14,8 @@
 
 PagCamera camera;
 
-double x;
-double y;
-
 static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
-	camera.mover(1);
+	camera.mover(xpos, ypos);
 }
 
 int main(int argc, char** argv) {
@@ -97,7 +94,9 @@ int main(int argc, char** argv) {
 	std::cout << glGetString(GL_VERSION) << std::endl;
 	std::cout << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 
+	double x, y;
 	glfwGetCursorPos(window, &x, &y);
+	camera = PagCamera(x, y);
 
 	glfwSetCursorPosCallback(window, cursor_position_callback);
 
