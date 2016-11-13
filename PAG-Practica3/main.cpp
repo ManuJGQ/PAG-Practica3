@@ -19,13 +19,30 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
-	std::cout << "ENTRO" << std::endl;
-	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) camera.setRotates(true);
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+		camera.setRotates(true);
+		camera.setTruck(false);
+	}
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) camera.setRotates(false);
+	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+		camera.setTruck(true);
+		camera.setRotates(false);
+	}
+	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE) camera.setTruck(false);
 }
 
 void scroll(GLFWwindow* window, double x, double y) {
 	camera.zoom(y * -1);
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
+	if (key == GLFW_KEY_O && action == GLFW_PRESS) {
+		if (camera.getOrbit()) camera.setOrbit(false);
+		else {
+			camera.setOrbit(true);
+
+		}
+	}
 }
 
 int main(int argc, char** argv) {
@@ -108,6 +125,7 @@ int main(int argc, char** argv) {
 	glfwSetCursorPosCallback(window, cursor_position_callback);
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
 	glfwSetScrollCallback(window, scroll);
+	glfwSetKeyCallback(window, key_callback);
 
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 

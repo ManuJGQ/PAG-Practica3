@@ -22,12 +22,18 @@ class PagCamera{
 	double mouseY;
 
 	bool rotates;
+	bool truck;
+	bool orbit;
 public:
 	PagCamera();
 	PagCamera(double x, double y);
 	void mover(double movX, double movY);
+	void movOrbit();
 	glm::mat4 getViewProjectionMatrix() const { return ProjectionMatrix * ViewMatrix; }
 	void setRotates(bool _rotates) { rotates = _rotates; }
+	void setTruck(bool _truck) { truck = _truck; }
+	void setOrbit(bool _orbit) { orbit = _orbit; }
+	bool getOrbit() const { return orbit; }
 	void zoom(double _zoom);
 
 	~PagCamera();
