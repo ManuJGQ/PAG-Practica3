@@ -52,12 +52,7 @@ int main(int argc, char** argv) {
 	}
 
 	//Creamos la jerarquia de objetos
-	Pag3DGroup objects;
-	PagRevolutionObject object;
-	if (perfiles > 1) {
-		objects = Pag3DGroup(ficheros, perfiles);
-	}
-	else object = PagRevolutionObject(Structs::Fichero(ficheros[0]));
+	Pag3DGroup objects = Pag3DGroup(ficheros, perfiles);
 
 	//Preparamos la ventana
 	std::cout << "Starting application" << std::endl;
@@ -107,27 +102,19 @@ int main(int argc, char** argv) {
 	glViewport(0, 0, 1024, 768);
 
 	//Creamos las Geometrias y Topologias de los diferentes objetos
-	if (perfiles > 1) {
-		objects.createObject();
-	}
-	else {
-		object.createObject();
-	}
+	objects.createObject();
+	
 
 	//glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
 
 	//Dibujamos los objetos
 	do {
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glm::mat4 ViewProjectionMatrix = camera.getViewProjectionMatrix();
 		
-		if (perfiles > 1) {
-			objects.drawSolid(ViewProjectionMatrix);
-		}
-		else {
-			object.drawSolid(ViewProjectionMatrix);
-		}
+		objects.drawSolid(ViewProjectionMatrix);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

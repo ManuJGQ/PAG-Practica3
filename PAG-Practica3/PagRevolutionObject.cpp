@@ -463,15 +463,15 @@ void PagRevolutionObject::createObject() {
 
 	if (flagBottomTape) {
 		for (int i = 0; i < slices; i++) {
-			indicesBottomTape[i] = slices - 1 - i;
+			indicesBottomTape[i + 1] = slices - 1 - i;
 		}
-		indicesBottomTape[slices] = slices;
+		indicesBottomTape[0] = slices;
 	}
 	if (flagTopTape) {
 		for (int i = 0; i < slices; i++) {
-			indicesTopTape[i] = i;
+			indicesTopTape[i + 1] = i;
 		}
-		indicesTopTape[slices] = slices;
+		indicesTopTape[0] = slices;
 	}
 	int k = 0;
 	for (int i = 0; i < slices; i++) {
