@@ -18,6 +18,16 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
 	camera.mover(xpos, ypos);
 }
 
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
+	std::cout << "ENTRO" << std::endl;
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) camera.setRotates(true);
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) camera.setRotates(false);
+}
+
+void scroll(GLFWwindow* window, double x, double y) {
+	camera.zoom(y * -1);
+}
+
 int main(int argc, char** argv) {
 	// Leemos los datos y txt del usuario
 	int perfiles;
@@ -89,11 +99,15 @@ int main(int argc, char** argv) {
 	std::cout << glGetString(GL_VERSION) << std::endl;
 	std::cout << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 
+	//Inicializamos Camara
 	double x, y;
 	glfwGetCursorPos(window, &x, &y);
 	camera = PagCamera(x, y);
 
+	//Callbacks Camara
 	glfwSetCursorPosCallback(window, cursor_position_callback);
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
+	glfwSetScrollCallback(window, scroll);
 
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
