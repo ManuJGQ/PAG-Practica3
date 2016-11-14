@@ -40,7 +40,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		if (camera.getOrbit()) camera.setOrbit(false);
 		else {
 			camera.setOrbit(true);
-
+			camera.movOrbit();
 		}
 	}
 }

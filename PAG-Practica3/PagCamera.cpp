@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "PagCamera.h"
 
 #include <math.h>
@@ -14,7 +16,7 @@ PagCamera::PagCamera() : mouseX(0), mouseY(0), rotates(false), truck(false), orb
 	fovY = 45.0f;
 	ProjectionMatrix *= glm::perspective(fovY, 4.0f / 3.0f, 0.1f, 100.f);
 	ViewMatrix *= glm::lookAt(glm::vec3(x, y, z),
-	                          glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
+		glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
 }
 
 PagCamera::PagCamera(double _x, double _y) : mouseX(512), mouseY(384), rotates(false), truck(false), orbit(false) {
@@ -27,11 +29,11 @@ PagCamera::PagCamera(double _x, double _y) : mouseX(512), mouseY(384), rotates(f
 	fovY = 45.0f;
 	ProjectionMatrix *= glm::perspective(fovY, 4.0f / 3.0f, 0.1f, 100.f);
 	ViewMatrix *= glm::lookAt(glm::vec3(x, y, z),
-	                          glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
+		glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
 }
 
 void PagCamera::mover(double movX, double movY) {
-	if(!orbit) {
+	if (!orbit) {
 		if (rotates) {
 			double xtemp = mouseX - movX;
 			xtemp = xtemp / 16;
@@ -66,9 +68,9 @@ void PagCamera::mover(double movX, double movY) {
 	}
 }
 
-void PagCamera::movOrbit(){
+void PagCamera::movOrbit() {
 	x = 0.0;
-	y = 10.0;
+	y = 30.0;
 	z = -30.0;
 	xLookAt = 0.0;
 	yLookAt = 0.0;
@@ -80,16 +82,15 @@ void PagCamera::movOrbit(){
 
 	double angleRadIncrement = (2 * PI) / 100;
 
-	while (orbit) {
-		double xtemp = x;
-		//double ztemp = z;
-		for(int i=0;i<100;i++) {
-			x = xtemp * cos(angleRadIncrement * i);
-			z = x * -sin(angleRadIncrement * i);
-			ViewMatrix = glm::lookAt(glm::vec3(x, y, z),
-				glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
-			if (!orbit)break;
-		}
+
+	std::cout << "Orbit" << std::endl;
+	//double xtemp = x;
+	double ztemp = z;
+	for (int i = 0; i < 100; i++) {
+		x = ztemp * cos(angleRadIncrement * i);
+		z = ztemp * -sin(angleRadIncrement * i);
+		ViewMatrix = glm::lookAt(glm::vec3(x, y, z),
+			glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
 	}
 }
 
