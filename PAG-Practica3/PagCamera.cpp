@@ -3,6 +3,7 @@
 #include "PagCamera.h"
 
 #include <math.h>
+#include <thread>
 
 #define PI 3.14159265358979323846
 
@@ -82,15 +83,20 @@ void PagCamera::movOrbit() {
 
 	double angleRadIncrement = (2 * PI) / 100;
 
-
-	std::cout << "Orbit" << std::endl;
-	//double xtemp = x;
-	double ztemp = z;
-	for (int i = 0; i < 100; i++) {
-		x = ztemp * cos(angleRadIncrement * i);
-		z = ztemp * -sin(angleRadIncrement * i);
-		ViewMatrix = glm::lookAt(glm::vec3(x, y, z),
-			glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
+	while (orbit) {
+		std::cout << "Orbit" << std::endl;
+		//double xtemp = x;
+		double ztemp = z;
+		for (int i = 0; i < 100; i++) {
+			x = ztemp * cos(angleRadIncrement * i);
+			z = ztemp * -sin(angleRadIncrement * i);
+			std::cout << x << " - " << z << std::endl;
+			ViewMatrix = glm::lookAt(glm::vec3(x, y, z),
+				glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
+			if (!orbit)break;
+			std::chrono::milliseconds timespan(2000); 
+			std::this_thread::sleep_for(timespan);
+		}
 	}
 }
 
