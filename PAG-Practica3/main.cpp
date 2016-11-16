@@ -18,7 +18,7 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
 	camera.mover(xpos, ypos);
 }
 
-void mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 		camera.setRotates(true);
 		camera.setTruck(false);
@@ -35,13 +35,14 @@ void scroll(GLFWwindow* window, double x, double y) {
 	camera.zoom(y * -1);
 }
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
-	if (key == GLFW_KEY_O && action == GLFW_PRESS) {
-		if (camera.getOrbit()) camera.setOrbit(false);
-		else {
-			camera.setOrbit(true);
-			camera.movOrbit();
-		}
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	if (key == GLFW_KEY_O && action == GLFW_REPEAT) {
+		camera.setOrbit(true);
+		camera.movOrbit();
+	}
+	if (key == GLFW_KEY_O && action == GLFW_RELEASE) {
+		camera.setOrbit(false);
+		camera.resetCamera();
 	}
 }
 
@@ -135,7 +136,7 @@ int main(int argc, char** argv) {
 
 	//Creamos las Geometrias y Topologias de los diferentes objetos
 	objects.createObject();
-	
+
 
 	//glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
@@ -145,7 +146,7 @@ int main(int argc, char** argv) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glm::mat4 ViewProjectionMatrix = camera.getViewProjectionMatrix();
-		
+
 		objects.drawSolid(ViewProjectionMatrix);
 
 		glfwSwapBuffers(window);

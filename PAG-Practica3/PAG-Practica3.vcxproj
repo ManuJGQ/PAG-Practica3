@@ -152,6 +152,8 @@
     <ClInclude Include="Structs.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ADS.frag" />
+    <None Include="ADS.vert" />
     <None Include="points.frag" />
     <None Include="points.vert" />
     <None Include="pointsMultiColor.frag" />

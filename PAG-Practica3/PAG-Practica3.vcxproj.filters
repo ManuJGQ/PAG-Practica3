@@ -91,5 +91,11 @@
     <None Include="Test.vert">
       <Filter>Archivos de recursos</Filter>
     </None>
+    <None Include="ADS.frag">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="ADS.vert">
+      <Filter>Archivos de recursos</Filter>
+    </None>
   </ItemGroup>
 </Project>

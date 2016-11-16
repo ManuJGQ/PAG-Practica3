@@ -3,11 +3,12 @@
 #include "PagCamera.h"
 
 #include <math.h>
-#include <thread>
+#include <conio.h>
+#include <windows.h>
 
 #define PI 3.14159265358979323846
 
-PagCamera::PagCamera() : mouseX(0), mouseY(0), rotates(false), truck(false), orbit(false) {
+PagCamera::PagCamera() : mouseX(0), mouseY(0), rotates(false), truck(false), orbit(false), ejecutandoOrbit(false), indOrbit(0), zOrbit(0) {
 	x = 0.0;
 	y = 0.0;
 	z = -30.0;
@@ -20,7 +21,8 @@ PagCamera::PagCamera() : mouseX(0), mouseY(0), rotates(false), truck(false), orb
 		glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
 }
 
-PagCamera::PagCamera(double _x, double _y) : mouseX(512), mouseY(384), rotates(false), truck(false), orbit(false) {
+PagCamera::PagCamera(double _x, double _y) : mouseX(512), mouseY(384), rotates(false), truck(false),
+orbit(false), ejecutandoOrbit(false), indOrbit(0), zOrbit(0) {
 	x = 0.0;
 	y = 0.0;
 	z = -30.0;
@@ -70,8 +72,37 @@ void PagCamera::mover(double movX, double movY) {
 }
 
 void PagCamera::movOrbit() {
+	if (!ejecutandoOrbit) {
+		x = 0.0;
+		y = 0.0;
+		z = -30.0;
+		xLookAt = 0.0;
+		yLookAt = 0.0;
+		zLookAt = 0.0;
+		fovY = 45.0f;
+		ProjectionMatrix = glm::perspective(fovY, 4.0f / 3.0f, 0.1f, 100.f);
+		ViewMatrix = glm::lookAt(glm::vec3(x, y, z),
+			glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
+		ejecutandoOrbit = true;
+		zOrbit = z;
+	}
+
+	double angleRadIncrement = (2 * PI) / 100;
+
+	std::cout << "Orbit" << std::endl;
+	//double xtemp = x;
+	x = zOrbit * cos(angleRadIncrement * (indOrbit % 100));
+	z = zOrbit * -sin(angleRadIncrement * (indOrbit % 100));
+	std::cout << x << " - " << z << std::endl;
+	ViewMatrix = glm::lookAt(glm::vec3(x, y, z),
+		glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
+	indOrbit++;
+	Sleep(100);
+}
+
+void PagCamera::resetCamera() {
 	x = 0.0;
-	y = 30.0;
+	y = 0.0;
 	z = -30.0;
 	xLookAt = 0.0;
 	yLookAt = 0.0;
@@ -80,24 +111,7 @@ void PagCamera::movOrbit() {
 	ProjectionMatrix = glm::perspective(fovY, 4.0f / 3.0f, 0.1f, 100.f);
 	ViewMatrix = glm::lookAt(glm::vec3(x, y, z),
 		glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
-
-	double angleRadIncrement = (2 * PI) / 100;
-
-	while (orbit) {
-		std::cout << "Orbit" << std::endl;
-		//double xtemp = x;
-		double ztemp = z;
-		for (int i = 0; i < 100; i++) {
-			x = ztemp * cos(angleRadIncrement * i);
-			z = ztemp * -sin(angleRadIncrement * i);
-			std::cout << x << " - " << z << std::endl;
-			ViewMatrix = glm::lookAt(glm::vec3(x, y, z),
-				glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
-			if (!orbit)break;
-			std::chrono::milliseconds timespan(2000); 
-			std::this_thread::sleep_for(timespan);
-		}
-	}
+	ejecutandoOrbit = false;
 }
 
 void PagCamera::zoom(double _zoom) {
