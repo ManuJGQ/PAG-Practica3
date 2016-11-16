@@ -23,7 +23,7 @@ vec3 ads(){
 	vec3 diffuse = (Id * Kd * max( dot(l,n), 0.0));
 	vec3 specular;
 	specular = (Is * Ks * pow( max( dot(r,v), 0.0), Shininess));
-	return ambient + defuse + specular;
+	return ambient + diffuse + specular;
 }
 
 void main() {

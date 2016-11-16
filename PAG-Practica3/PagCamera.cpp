@@ -3,8 +3,6 @@
 #include "PagCamera.h"
 
 #include <math.h>
-#include <conio.h>
-#include <windows.h>
 
 #define PI 3.14159265358979323846
 
@@ -74,7 +72,7 @@ void PagCamera::mover(double movX, double movY) {
 void PagCamera::movOrbit() {
 	if (!ejecutandoOrbit) {
 		x = 0.0;
-		y = 0.0;
+		y = 30.0;
 		z = -30.0;
 		xLookAt = 0.0;
 		yLookAt = 0.0;
@@ -94,10 +92,11 @@ void PagCamera::movOrbit() {
 	x = zOrbit * cos(angleRadIncrement * (indOrbit % 100));
 	z = zOrbit * -sin(angleRadIncrement * (indOrbit % 100));
 	std::cout << x << " - " << z << std::endl;
-	ViewMatrix = glm::lookAt(glm::vec3(x, y, z),
-		glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
 	indOrbit++;
-	Sleep(100);
+	ViewMatrix = glm::lookAt(glm::vec3(x, 30.0, z),
+		glm::vec3(xLookAt, yLookAt, zLookAt), glm::vec3(0.0, 1.0, 0.0));
+	sleep();
+	return;
 }
 
 void PagCamera::resetCamera() {

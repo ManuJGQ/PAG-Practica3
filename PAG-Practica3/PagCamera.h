@@ -4,6 +4,8 @@
 #include <GLFW/glfw3.h>
 #include "gtc\matrix_transform.hpp"
 
+#include <windows.h>
+
 class PagCamera{
 	glm::mat4 ProjectionMatrix;
 	glm::mat4 ViewMatrix;
@@ -34,6 +36,7 @@ public:
 	void mover(double movX, double movY);
 	void movOrbit();
 	void resetCamera();
+	static void sleep() { Sleep(100); }
 	glm::mat4 getViewProjectionMatrix() const { return ProjectionMatrix * ViewMatrix; }
 	void setRotates(bool _rotates) { rotates = _rotates; }
 	void setTruck(bool _truck) { truck = _truck; }

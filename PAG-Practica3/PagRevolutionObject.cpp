@@ -489,7 +489,7 @@ void PagRevolutionObject::createObject() {
 	//Arrays para los vbos y ibos
 	for (int i = 0; i < tamaGeometriaCoordText; i++) {
 		pointsColor[i] = { glm::vec3((GLfloat)geometria[i].vertice.x, (GLfloat)geometria[i].vertice.y, (GLfloat)geometria[i].vertice.z),
-			glm::vec3(0.0, 0.0, 0.0) };
+			glm::vec3((GLfloat)geometria[i].normal.x, (GLfloat)geometria[i].normal.y, (GLfloat)geometria[i].normal.z) };
 	}
 
 	for (int i = 0; i < tamaIndices; i++) {
@@ -499,7 +499,7 @@ void PagRevolutionObject::createObject() {
 	if (flagBottomTape) {
 		for (int i = 0; i < slices + 1; i++) {
 			pointsColorBottom[i] = { glm::vec3((GLfloat)geometriaBottomTape[i].vertice.x, (GLfloat)geometriaBottomTape[i].vertice.y, 
-				(GLfloat)geometriaBottomTape[i].vertice.z), glm::vec3(1.0, 0.0, 0.0) };
+				(GLfloat)geometriaBottomTape[i].vertice.z), glm::vec3((GLfloat)geometria[i].normal.x, (GLfloat)geometria[i].normal.y, (GLfloat)geometria[i].normal.z) };
 		}
 
 		for (int i = 0; i < slices + 1; i++) {
@@ -510,7 +510,7 @@ void PagRevolutionObject::createObject() {
 	if (flagTopTape) {
 		for (int i = 0; i < slices + 1; i++) {
 			pointsColorTop[i] = { glm::vec3((GLfloat)geometriaTopTape[i].vertice.x, (GLfloat)geometriaTopTape[i].vertice.y, 
-				(GLfloat)geometriaTopTape[i].vertice.z), glm::vec3(0.0, 0.0, 1.0) };
+				(GLfloat)geometriaTopTape[i].vertice.z), glm::vec3((GLfloat)geometria[i].normal.x, (GLfloat)geometria[i].normal.y, (GLfloat)geometria[i].normal.z) };
 		}
 
 		for (int i = 0; i < slices + 1; i++) {
@@ -636,13 +636,21 @@ void PagRevolutionObject::drawPointsCloud(glm::mat4 _ViewProjectionMatrix) {
 
 void PagRevolutionObject::drawSolid(glm::mat4 _ViewProjectionMatrix){
 	if (!shaderCreado) {
-		shader.createShaderProgram("Test");
+		shader.createShaderProgram("ADS");
 		shaderCreado = true;
 	}
 
 	shader.use();
-	shader.setUniform("pointSize", 4.0f);
 	shader.setUniform("mvpMatrix", _ViewProjectionMatrix);
+	shader.setUniform("mModelView", _ViewProjectionMatrix);
+	shader.setUniform("lightPosition", glm::vec3(-500.0, 50.0, -500.0));
+	shader.setUniform("Ka", glm::vec3(1.0, 0.5, 0.0));
+	shader.setUniform("Kd", glm::vec3(1.0, 1.0, 1.0));
+	shader.setUniform("Ks", glm::vec3(1.0, 1.0, 1.0));
+	shader.setUniform("Ia", glm::vec3(1.0, 1.0, 1.0));
+	shader.setUniform("Id", glm::vec3(1.0, 1.0, 1.0));
+	shader.setUniform("Is", glm::vec3(1.0, 1.0, 1.0));
+	shader.setUniform("Shininess", 128.0f);
 
 	GLuint vao;
 	GLuint vbo;

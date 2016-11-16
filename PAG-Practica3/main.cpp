@@ -10,7 +10,6 @@
 
 #include "Pag3DGroup.h"
 #include "Structs.h"
-#include "PagRevolutionObject.h"
 
 PagCamera camera;
 
@@ -36,7 +35,7 @@ void scroll(GLFWwindow* window, double x, double y) {
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-	if (key == GLFW_KEY_O && action == GLFW_REPEAT) {
+	if (key == GLFW_KEY_O && action == GLFW_PRESS) {
 		camera.setOrbit(true);
 		camera.movOrbit();
 	}
