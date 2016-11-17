@@ -12,6 +12,7 @@
 #include "Structs.h"
 
 PagCamera camera;
+Pag3DGroup objects;
 
 static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
 	camera.mover(xpos, ypos);
@@ -35,9 +36,17 @@ void scroll(GLFWwindow* window, double x, double y) {
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-	if (key == GLFW_KEY_O && action == GLFW_PRESS) {
+	if (key == GLFW_KEY_O && action == GLFW_REPEAT) {
 		camera.setOrbit(true);
 		camera.movOrbit();
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glm::mat4 ViewProjectionMatrix = camera.getViewProjectionMatrix();
+
+		objects.drawSolid(ViewProjectionMatrix);
+
+		glfwSwapBuffers(window);
+		glfwPollEvents();
 	}
 	if (key == GLFW_KEY_O && action == GLFW_RELEASE) {
 		camera.setOrbit(false);
@@ -79,7 +88,7 @@ int main(int argc, char** argv) {
 	}
 
 	//Creamos la jerarquia de objetos
-	Pag3DGroup objects = Pag3DGroup(ficheros, perfiles);
+    objects = Pag3DGroup(ficheros, perfiles);
 
 	//Preparamos la ventana
 	std::cout << "Starting application" << std::endl;
