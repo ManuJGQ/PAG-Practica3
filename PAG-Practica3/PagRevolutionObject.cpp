@@ -641,6 +641,15 @@ void PagRevolutionObject::drawSolid(glm::mat4 _ViewProjectionMatrix){
 	}
 
 	shader.use();
+
+	/*shader.setUniform("mvpMatrix", _ViewProjectionMatrix);
+	shader.setUniform("pointSize", 4.0f);*/
+
+	/*
+	 * NOTA: alternar entre los setUniform de arriba(Test) y abajo(ADS) en funcion del shader
+	 * que se quiera utilizar
+	 */
+
 	shader.setUniform("mvpMatrix", _ViewProjectionMatrix);
 	shader.setUniform("mModelView", _ViewProjectionMatrix);
 	shader.setUniform("lightPosition", glm::vec3(-500.0, 50.0, -500.0));
